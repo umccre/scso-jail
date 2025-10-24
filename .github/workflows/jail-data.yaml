@@ -32,8 +32,28 @@ jobs:
       - uses: r-lib/actions/setup-pandoc@v2
 
       - uses: r-lib/actions/setup-r-dependencies@v2
+      
+      - name: Allow unsafe legacy renegotiation for this job
+        run: |
+          cat > openssl_legacy.cnf << 'EOF'
+          openssl_conf = openssl_init
+
+          [openssl_init]
+          ssl_conf = ssl_sect
+
+          [ssl_sect]
+          system_default = system_default_sect
+
+          [system_default_sect]
+          Options = UnsafeLegacyRenegotiation
+          EOF
+        #
+        # That writes ./openssl_legacy.cnf
+
 
       - name: Generate data
+        env:
+          OPENSSL_CONF: ${{ github.workspace }}/openssl_legacy.cnf
         run: |
           source("R/jail_scrape.R")
         shell: Rscript {0}
