@@ -1,6 +1,6 @@
 on:
    schedule:
-    - cron: "5 6,18 * * *
+    - cron: "5 6,18 * * *"
   push:
     branches: main
 
