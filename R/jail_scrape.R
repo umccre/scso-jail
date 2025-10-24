@@ -199,7 +199,14 @@ download_with_test <- function(path, login_res, count = 1){
   jail_path <- "%2FSCSO-InJail%2FSCSO-InJail.xls"
     file_res <- download_with_test(path = jail_path, login_res)
     stri_sub(jail_path, nchar(jail_path)-3, nchar(jail_path)-4) <- paste0("_xxx", datestamp)
-    writeBin(content(file_res, as = "raw"), con = paste0("data", xml2::url_parse(jail_path)$path))
+    
+    xls_filepath <- paste0("data", xml2::url_parse(jail_path)$path)
+    if(!dir.exists(dirname(xls_filepath))) {
+      dir.create(dirname(xls_filepath), recursive = TRUE, showWarnings = FALSE)
+    }
+    
+    
+    writeBin(content(file_res, as = "raw"), con = xls_filepath)
 
 
 
